@@ -243,6 +243,18 @@ LSP_Location :: struct {
     range: LSP_Range;
 }
 
+operator == :: (a: LSP_Location, b: LSP_Location) -> bool {
+    return a.uri == b.uri && a.range == b.range;
+}
+
+operator == :: (a: LSP_Range, b: LSP_Range) -> bool {
+    return a.start == b.start && a.end == b.end;
+}
+
+operator == :: (a: LSP_Position, b: LSP_Position) -> bool {
+    return a.line == b.line && a.character == b.character;
+}
+
 LSP_Location_Link :: struct {
     originSelectionRange: LSP_Range;
     targetUri: string;

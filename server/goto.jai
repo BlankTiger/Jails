@@ -272,10 +272,18 @@ handle_goto :: (request: LSP_Request_Message_Definition) {
         return;
     }
 
-    locations := NewArray(decls.count, LSP_Location);
-    defer array_free(locations);
+    locations: [..]LSP_Location;
+    defer free(locations.data);
+    array_reserve(*locations, decls.count);
 
-    for decls locations[it_index] = node_location_to_lsp_location(it.location);
+    for decl: decls {
+        lsp_loc := node_location_to_lsp_location(decl.location);
+        for loc: locations {
+            if lsp_loc == loc continue decl;
+        }
 
-    lsp_respond(request.id, locations);
+        array_add(*locations, lsp_loc);
+    }
+
+    lsp_respond(request.id, locations.data);
 }
